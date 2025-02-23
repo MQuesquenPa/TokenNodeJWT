@@ -1,5 +1,6 @@
 import { pool } from '../config/db';
 import { RowDataPacket } from 'mysql2';
+import { User } from '../models/userModel';
 
 export const verifyLogin = async (email:String) => {
     const [rows] = await pool.execute('SELECT * FROM user WHERE email = ?', [email]);
@@ -17,3 +18,11 @@ export const updateLastLogin = async (email:String) => {
 };
 
 
+export const saveUser = async (req:User) => {
+    const [rows] = await pool.execute(
+        'INSERT INTO user (email, password, role, status, created_at) VALUES (?, ?, ?, ?, ?)', 
+        [req.email, req.password, req.role, req.status, req.created_at]
+    );
+    return rows;
+
+};
